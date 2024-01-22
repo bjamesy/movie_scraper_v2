@@ -1,0 +1,9 @@
+version: "3"
+services:
+  core-scraper:
+    build: .
+    container_name: "core-scraper"
+    ports: 
+      - "8000:15400"
+    volumes: 
+      - ./app/:/app
