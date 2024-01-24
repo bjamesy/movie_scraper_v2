@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.src.scrapers.revue import get_revue
+from src.scrapers.revue import get_revue
 
 router = APIRouter()
 

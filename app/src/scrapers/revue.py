@@ -1,5 +1,4 @@
 import requests
-import logging 
 from bs4 import BeautifulSoup
 
 async def get_revue():
@@ -9,13 +8,15 @@ async def get_revue():
     # Send a GET request to the URL
     response = requests.get(url)
 
+    print("Tentative response ....", response)
+
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
         print("IN HERE : ")
         # Parse the HTML content of the page
         soup = BeautifulSoup(response.text, 'html.parser')
         print("HERE", soup)
-        logging.info("Here is the DOM: ", soup)
+        print("Here is the DOM: ", soup)
 
         # Extract information based on the structure of the HTML
         # For example, let's extract movie titles from h2 elements
@@ -28,7 +29,7 @@ async def get_revue():
         
         return True
     else:
-        logging.debug(f"Error: {response.status_code}")
+        print(f"Revue Error: {response.status_code}")
 
         return False
 
