@@ -140,3 +140,26 @@ async def get_paradise():
         print(f"Paradise Error: {response.status_code}")
 
         return False
+
+async def get_kingsway():
+    # kingsway calendar page
+    url = "http://kingswaymovies.ca/index.html"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        screenings = []
+
+        html = BeautifulSoup(response.text, 'html.parser')
+        movies = html.find_all(style="border: 2px solid ; width: 630px; height: 198px;")
+
+        for movie in movies:
+            screenings.append({ movie['alt'] })
+
+        print("SCREENINGS", screenings)
+
+        return screenings
+    else:
+        print(f"Kingsway Error: {response.status_code}")
+
+        return False
