@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
+# from pyppeteer import launch
 
 async def get_revue():
     # revue calendar page
@@ -30,28 +30,53 @@ async def get_revue():
 
         return False
 
-async def get_tiff():
-    screenings = []
-    # tiff calendar page
-    url = "https://tiff.net/calendar"
+# async def get_tiff():
+#     # tiff calendar page
+#     url = "https://tiff.net/calendar"
 
-    browser = webdriver.PhantomJS()
-    browser.get(url)
-    html = browser.page_source
-    soup = BeautifulSoup(html, 'html.parser')
+#     browser = await launch()
+#     page = await browser.newPage()
+#     await page.goto(url)
 
-    # todays_movies = html.find(class_="0").find_all('li')
+#     screenings = await page.evaluate('''() => {
+#         return {
+#             width: document.documentElement.clientWidth,
+#             height: document.documentElement.clientHeight,
+#             deviceScaleFactor: window.devicePixelRatio,
+#         }
+#     }''')
 
-    print("TODAYS MOVIES", soup.prettify())
-    # for movie in todays_movies:
-    #     movie
-    #     screenings.append({
-    #         "title": movie.find(class_="Name").text,
-    #         "time": movie.find(class_="Time").text,
-    #         "link": f"prod3.agileticketing.net/websales/pages/{movie.find(class_='ButtonLink')['href']}"
-    #     })
+#     print("SCREENINGS", screenings)
 
-    print("SCREENINGS", screenings)
+#     return screenings
 
-    return screenings
+#     await browser.close()
 
+async def get_fox():
+    # fox calendar page
+    url = "https://www.foxtheatre.ca/schedule/"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        screenings = []
+
+        html = BeautifulSoup(response.text, 'html.parser')
+        todays_movies = html.find(class_="fc-day-today")
+
+        movies = todays_movies.find_all(class_="fc-daygrid-event-harness")
+
+        for movie in movies:
+            screenings.append({
+                "title": movie.find(class_="fc-event-title").text,
+                "time": movie.find(class_="fc-event-time").text,
+                "link": movie.find(class_='fc-event-today')['href']
+            })
+
+        print("SCREENINGS", screenings)
+
+        return screenings
+    else:
+        print(f"Fox Error: {response.status_code}")
+
+        return False
