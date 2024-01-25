@@ -1,12 +1,13 @@
 from fastapi import APIRouter
-from src.scrapers.revue import get_revue
+from src.scrapers.theatre_scraper import (
+    get_revue,
+    get_tiff
+)
 
 router = APIRouter()
 
 @router.get("/")
 async def get_screenings():
-    res = await get_revue()
+    res = await get_tiff()
 
-    print("GETTING REVUE ", res)
-
-    return True 
+    return res
