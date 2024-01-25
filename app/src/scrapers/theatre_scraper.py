@@ -30,3 +30,28 @@ async def get_revue():
 
         return False
 
+async def get_tiff():
+    screenings = []
+    # tiff calendar page
+    url = "https://tiff.net/calendar"
+
+    browser = webdriver.PhantomJS()
+    browser.get(url)
+    html = browser.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+
+    # todays_movies = html.find(class_="0").find_all('li')
+
+    print("TODAYS MOVIES", soup.prettify())
+    # for movie in todays_movies:
+    #     movie
+    #     screenings.append({
+    #         "title": movie.find(class_="Name").text,
+    #         "time": movie.find(class_="Time").text,
+    #         "link": f"prod3.agileticketing.net/websales/pages/{movie.find(class_='ButtonLink')['href']}"
+    #     })
+
+    print("SCREENINGS", screenings)
+
+    return screenings
+
