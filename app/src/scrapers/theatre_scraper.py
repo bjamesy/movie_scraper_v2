@@ -113,3 +113,30 @@ async def get_carlton():
         print(f"Carlton Error: {response.status_code}")
 
         return False
+
+async def get_paradise():
+    # paradise calendar page
+    url = "https://paradiseonbloor.com/calendar"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        screenings = []
+
+        html = BeautifulSoup(response.text, 'html.parser')
+        movies = html.find(class_="current-day").find_all(class_="calendar-event")
+
+        for movie in movies:
+            screenings.append({
+                "title": movie.find(class_="event-title").text,
+                "time": movie.find(class_="event-date-time").text,
+                "link": movie.find(class_='event-links').find('a')['href']
+            })
+
+        print("SCREENINGS", screenings)
+
+        return screenings
+    else:
+        print(f"Paradise Error: {response.status_code}")
+
+        return False
