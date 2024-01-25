@@ -80,3 +80,36 @@ async def get_fox():
         print(f"Fox Error: {response.status_code}")
 
         return False
+
+async def get_carlton():
+    # carlton calendar page
+    url = "https://imaginecinemas.com/cinema/carlton/"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        screenings = []
+        showtimes = []
+
+        html = BeautifulSoup(response.text, 'html.parser')
+        movies = html.find(id="theater-schedule").find_all(class_="movie-showtime")
+
+        for movie in movies:
+            times = movie.find(class_='times').find_all(class_='movie-performance')
+            for time in times:
+                showtimes.append(time.text)
+
+            screenings.append({
+                "title": movie.find(class_="movie-title").text,
+                "time": showtimes,
+                "link": movie.find(class_='movie-poster').find('a')['href']
+            })
+            showtimes = []
+
+        print("SCREENINGS", screenings)
+
+        return screenings
+    else:
+        print(f"Carlton Error: {response.status_code}")
+
+        return False
