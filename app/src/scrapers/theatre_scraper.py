@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+import pyppeteer
 from pyppeteer import launch
 
+pyppeteer.DEBUG = True  # print suppressed errors as error log
 
 async def get_revue():
     # revue calendar page
@@ -36,7 +38,7 @@ async def get_tiff():
     # tiff calendar page
     url = "https://tiff.net/calendar"
 
-    browser = await launch(headless=True, args=['--no-sandbox'])
+    browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
     page = await browser.newPage()
     await page.goto(url)
     await page.waitForSelector('.0', {'visible': True})
