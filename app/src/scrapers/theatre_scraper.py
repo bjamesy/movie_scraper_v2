@@ -192,27 +192,27 @@ async def get_hotdocs():
     # kingsway calendar page
     url = "https://hotdocs.ca/whats-on/watch-cinema"
 
-    response = requests.get(url)
+    browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+    page = await browser.newPage()
+    await page.goto(url)
+    # await page.waitForSelector('.fc-daygrid-day-events', {'visible': True})
+    html = await page.content()
 
-    if response.status_code == 200:
-        screenings = []
+    await browser.close()
 
-        html = BeautifulSoup(response.text, 'html.parser')
-        print("SCREENINGS", html)
+    screenings = []
 
-        movies = html.find(class_='cinema-day').find_all(class_='film-tote')
+    soup = BeautifulSoup(html, 'html.parser')
 
-        for movie in movies:
-            screenings.append({
-                "title": movie.find(class_="film-tote__heading").text,
-                "time": movie.find(class_="ticket-strip__time").text,
-                "link": movie.find(class_='ticket-strip')['href']
-            })
+    movies = soup.find(class_='cinema-day').find_all(class_='film-tote')
 
-        print("SCREENINGS", screenings)
+    for movie in movies:
+        screenings.append({
+            "title": movie.find(class_="film-tote__heading").text,
+            "time": movie.find(class_="ticket-strip__time").text,
+            "link": movie.find(class_='ticket-strip')['href']
+        })
 
-        return screenings
-    else:
-        print(f"Hotdocs Error: {response.status_code}")
+    print("SCREENINGS", screenings)
 
-        return False
+    return screenings
