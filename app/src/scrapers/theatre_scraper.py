@@ -102,9 +102,9 @@ async def get_fox():
     return screenings
 
 
-def get_carlton():
-    # carlton calendar page
-    url = "https://imaginecinemas.com/cinema/carlton/"
+def get_imagine_cinemas(url: str): # accepts url since dom is same for both carlton and market square
+    # url = "https://imaginecinemas.com/cinema/carlton/"
+    # url = "https://imaginecinemas.com/cinema/market-square/"
 
     response = requests.get(url)
 
@@ -189,7 +189,7 @@ def get_kingsway():
 
     
 async def get_hotdocs():
-    # kingsway calendar page
+    # hotdocs calendar page
     url = "https://hotdocs.ca/whats-on/watch-cinema"
 
     browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
