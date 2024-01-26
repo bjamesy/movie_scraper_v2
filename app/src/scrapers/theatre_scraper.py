@@ -5,7 +5,7 @@ from pyppeteer import launch
 
 pyppeteer.DEBUG = True  # print suppressed errors as error log
 
-async def get_revue():
+def get_revue():
     # revue calendar page
     url = "https://prod3.agileticketing.net/websales/pages/list.aspx?epguid=9416d3bf-ad16-479c-9d40-f0abda7cb4e9&"
 
@@ -41,15 +41,35 @@ async def get_tiff():
     browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
     page = await browser.newPage()
     await page.goto(url)
-    await page.waitForSelector('.0', {'visible': True})
-    html = page.content()
+    # await page.waitForSelector('.0', {'visible': True})
+    html = await page.content()
+
     await browser.close()
+
+    screenings = []
+    showtimes = []
 
     soup = BeautifulSoup(html, 'html.parser')
     todays_movies = soup.find(class_="0")
+    movies = todays_movies.find_all(class_="style__resultCard___vLGmu")
 
-    print(todays_movies)
-    return html
+    for movie in movies:
+        times = movie.find_all(class_='style__screeningButton___3rUW8')
+        print(times)
+        for time in times:
+            showtimes.append(time.text)
+
+        screenings.append({
+            "title": movie.find(class_="style__cardTitle___3rkLd").text,
+            "time": showtimes,
+            "link": f"tiff.net{movie.find(class_='row style__cardScheduleItems___36bhs').find('a')['href']}"
+        })
+
+        showtimes = []
+
+    print("SCREENINGS", screenings)
+
+    return screenings
 
 
 async def get_fox():
@@ -82,7 +102,7 @@ async def get_fox():
         return False
 
 
-async def get_carlton():
+def get_carlton():
     # carlton calendar page
     url = "https://imaginecinemas.com/cinema/carlton/"
 
@@ -116,7 +136,7 @@ async def get_carlton():
         return False
 
 
-async def get_paradise():
+def get_paradise():
     # paradise calendar page
     url = "https://paradiseonbloor.com/calendar"
 
@@ -144,7 +164,7 @@ async def get_paradise():
         return False
 
 
-async def get_kingsway():
+def get_kingsway():
     # kingsway calendar page
     url = "http://kingswaymovies.ca/index.html"
 
