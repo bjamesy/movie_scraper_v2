@@ -76,30 +76,30 @@ async def get_fox():
     # fox calendar page
     url = "https://www.foxtheatre.ca/schedule/"
 
-    response = requests.get(url)
+    browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+    page = await browser.newPage()
+    await page.goto(url)
+    # await page.waitForSelector('.fc-daygrid-day-events', {'visible': True})
+    html = await page.content()
 
-    if response.status_code == 200:
-        screenings = []
+    await browser.close()
 
-        html = BeautifulSoup(response.text, 'html.parser')
-        todays_movies = html.find(class_="fc-day-today")
+    screenings = []
 
-        movies = todays_movies.find_all(class_="fc-daygrid-event-harness")
+    soup = BeautifulSoup(html, 'html.parser')
+    todays_movies = soup.find(class_="fc-media-screen")
+    movies = todays_movies.find_all(class_="fc-event-today")
 
-        for movie in movies:
-            screenings.append({
-                "title": movie.find(class_="fc-event-title").text,
-                "time": movie.find(class_="fc-event-time").text,
-                "link": movie.find(class_='fc-event-today')['href']
-            })
+    for movie in movies:
+        screenings.append({
+            "title": movie.find(class_="fc-list-event-title").text,
+            "time": movie.find(class_="fc-list-event-time").text,
+            "link": movie.find('a')['href']
+        })
 
-        print("SCREENINGS", screenings)
+    print("SCREENINGS", screenings)
 
-        return screenings
-    else:
-        print(f"Fox Error: {response.status_code}")
-
-        return False
+    return screenings
 
 
 def get_carlton():

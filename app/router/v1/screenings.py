@@ -13,6 +13,6 @@ router = APIRouter()
 
 @router.get("/")
 async def get_screenings():
-    res = await get_tiff()
+    res = await get_fox()
 
     return res
