@@ -35,41 +35,45 @@ def get_revue():
 
 
 async def get_tiff():
-    # tiff calendar page
-    url = "https://tiff.net/calendar"
+    try:
+        # tiff calendar page
+        url = "https://tiff.net/calendar"
 
-    browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
-    page = await browser.newPage()
-    await page.goto(url)
-    # await page.waitForSelector('.0', {'visible': True})
-    html = await page.content()
+        browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+        page = await browser.newPage()
+        await page.goto(url)
+        # await page.waitForSelector('.0', {'visible': True})
+        html = await page.content()
 
-    await browser.close()
+        await browser.close()
 
-    screenings = []
-    showtimes = []
-
-    soup = BeautifulSoup(html, 'html.parser')
-    todays_movies = soup.find(class_="0")
-    movies = todays_movies.find_all(class_="style__resultCard___vLGmu")
-
-    for movie in movies:
-        times = movie.find_all(class_='style__screeningButton___3rUW8')
-        print(times)
-        for time in times:
-            showtimes.append(time.text)
-
-        screenings.append({
-            "title": movie.find(class_="style__cardTitle___3rkLd").text,
-            "time": showtimes,
-            "link": f"tiff.net{movie.find(class_='row style__cardScheduleItems___36bhs').find('a')['href']}"
-        })
-
+        screenings = []
         showtimes = []
 
-    print("SCREENINGS", screenings)
+        soup = BeautifulSoup(html, 'html.parser')
+        todays_movies = soup.find(class_="0")
+        movies = todays_movies.find_all(class_="style__resultCard___vLGmu")
 
-    return screenings
+        for movie in movies:
+            times = movie.find_all(class_='style__screeningButton___3rUW8')
+            for time in times:
+                showtimes.append(time.text)
+
+            screenings.append({
+                "title": movie.find(class_="style__cardTitle___3rkLd").text,
+                "time": showtimes,
+                "link": f"tiff.net{movie.find(class_='row style__cardScheduleItems___36bhs').find('a')['href']}"
+            })
+
+            showtimes = []
+
+        print("SCREENINGS", screenings)
+
+        return screenings
+    except NameError: 
+        print('name error exceptionn', NameError)
+    except:
+        print('unspecified exception')
 
 
 async def get_fox():
@@ -131,7 +135,7 @@ def get_imagine_cinemas(url: str): # accepts url since dom is same for both carl
 
         return screenings
     else:
-        print(f"Carlton Error: {response.status_code}")
+        print(f"Imagine Cinemas Error: {response.status_code}")
 
         return False
 
@@ -189,30 +193,37 @@ def get_kingsway():
 
     
 async def get_hotdocs():
+    try:
     # hotdocs calendar page
-    url = "https://hotdocs.ca/whats-on/watch-cinema"
+        url = "https://hotdocs.ca/whats-on/watch-cinema"
 
-    browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
-    page = await browser.newPage()
-    await page.goto(url)
-    # await page.waitForSelector('.fc-daygrid-day-events', {'visible': True})
-    html = await page.content()
+        browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+        page = await browser.newPage()
+        await page.goto(url)
+        # await page.waitForSelector('.fc-daygrid-day-events', {'visible': True})
+        html = await page.content()
 
-    await browser.close()
+        await browser.close()
 
-    screenings = []
+        screenings = []
 
-    soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, 'html.parser')
 
-    movies = soup.find(class_='cinema-day').find_all(class_='film-tote')
+        movies = soup.find(class_='cinema-day').find_all(class_='film-tote')
 
-    for movie in movies:
-        screenings.append({
-            "title": movie.find(class_="film-tote__heading").text,
-            "time": movie.find(class_="ticket-strip__time").text,
-            "link": movie.find(class_='ticket-strip')['href']
-        })
+        for movie in movies:
+            screenings.append({
+                "title": movie.find(class_="film-tote__heading").text,
+                "time": movie.find(class_="ticket-strip__time").text,
+                "link": movie.find(class_='ticket-strip')['href']
+            })
 
-    print("SCREENINGS", screenings)
+        print("SCREENINGS", screenings)
 
-    return screenings
+        return screenings
+
+
+    except NameError:
+        print('Error exception: ', NameError)
+    except: 
+        print('unspecified exception here')

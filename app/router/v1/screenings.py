@@ -14,6 +14,7 @@ router = APIRouter()
 @router.get("/")
 async def get_screenings():
     # res = get_imagine_cinemas("https://imaginecinemas.com/cinema/market-square/")
-    res = get_imagine_cinemas("https://imaginecinemas.com/cinema/carlton/")
+    # res = get_imagine_cinemas("https://imaginecinemas.com/cinema/carlton/")
+    res = await get_fox()
 
     return res
