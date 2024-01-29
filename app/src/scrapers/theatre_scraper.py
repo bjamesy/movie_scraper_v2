@@ -77,33 +77,38 @@ async def get_tiff():
 
 
 async def get_fox():
-    # fox calendar page
-    url = "https://www.foxtheatre.ca/schedule/"
+    try:
+        # fox calendar page
+        url = "https://www.foxtheatre.ca/schedule/"
 
-    browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
-    page = await browser.newPage()
-    await page.goto(url)
-    # await page.waitForSelector('.fc-daygrid-day-events', {'visible': True})
-    html = await page.content()
+        browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+        page = await browser.newPage()
+        await page.goto(url)
+        # await page.waitForSelector('.fc-daygrid-day-events', {'visible': True})
+        html = await page.content()
 
-    await browser.close()
+        await browser.close()
 
-    screenings = []
+        screenings = []
 
-    soup = BeautifulSoup(html, 'html.parser')
-    todays_movies = soup.find(class_="fc-media-screen")
-    movies = todays_movies.find_all(class_="fc-event-today")
+        soup = BeautifulSoup(html, 'html.parser')
+        todays_movies = soup.find(class_="fc-media-screen")
+        movies = todays_movies.find_all(class_="fc-event-today")
 
-    for movie in movies:
-        screenings.append({
-            "title": movie.find(class_="fc-list-event-title").text,
-            "time": movie.find(class_="fc-list-event-time").text,
-            "link": movie.find('a')['href']
-        })
+        for movie in movies:
+            screenings.append({
+                "title": movie.find(class_="fc-list-event-title").text,
+                "time": movie.find(class_="fc-list-event-time").text,
+                "link": movie.find('a')['href']
+            })
 
-    print("SCREENINGS", screenings)
+        print("SCREENINGS", screenings)
 
-    return screenings
+        return screenings
+    except NameError: 
+        print('Name error exception', NameError)
+    except: 
+        print('unspecified exception')
 
 
 def get_imagine_cinemas(url: str): # accepts url since dom is same for both carlton and market square
