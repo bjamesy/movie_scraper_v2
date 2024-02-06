@@ -10,3 +10,18 @@ services:
       - ./app:/app 
     cap_add:
       - SYS_ADMIN
+      
+  # redis-overcommit-on-host
+  redis-overcommit:
+    build: https://github.com/bkuhl/redis-overcommit-on-host.git
+    restart: 'no'
+    privileged: true
+    volumes:
+      - /proc/sys/vm:/mnt/vm
+
+  # Your existing Redis service
+  redis:
+    image: 'redis'
+    restart: 'always'
+    depends_on:
+      - redis-overcommit
