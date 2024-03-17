@@ -5,7 +5,7 @@ from pyppeteer import launch
 
 pyppeteer.DEBUG = True  # print suppressed errors as error log
 
-def get_revue():
+async def get_revue():
     # revue calendar page
     url = "https://prod3.agileticketing.net/websales/pages/list.aspx?epguid=9416d3bf-ad16-479c-9d40-f0abda7cb4e9&"
 
@@ -111,7 +111,7 @@ async def get_fox():
         print('unspecified exception')
 
 
-def get_imagine_cinemas(url: str): # accepts url since dom is same for both carlton and market square
+async def get_imagine_cinemas(url: str): # accepts url since dom is same for both carlton and market square
     # url = "https://imaginecinemas.com/cinema/carlton/"
     # url = "https://imaginecinemas.com/cinema/market-square/"
 
@@ -145,7 +145,7 @@ def get_imagine_cinemas(url: str): # accepts url since dom is same for both carl
         return False
 
 
-def get_paradise():
+async def get_paradise():
     # paradise calendar page
     url = "https://paradiseonbloor.com/calendar"
 
@@ -173,7 +173,7 @@ def get_paradise():
         return False
 
 
-def get_kingsway():
+async def get_kingsway():
     # kingsway calendar page
     url = "http://kingswaymovies.ca/index.html"
 

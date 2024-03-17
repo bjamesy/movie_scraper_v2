@@ -13,8 +13,22 @@ router = APIRouter()
 
 @router.get("/")
 async def get_screenings():
-    # res = get_imagine_cinemas("https://imaginecinemas.com/cinema/market-square/")
-    # res = get_imagine_cinemas("https://imaginecinemas.com/cinema/carlton/")
-    res = await get_fox()
+    carlton = await get_imagine_cinemas("https://imaginecinemas.com/cinema/carlton/")
+    fox = await get_fox()
+    revue = await get_revue()
+    tiff = await get_tiff()
+    paradise = await get_paradise()
+    kingsway = await get_kingsway()
+    hotdocs = await get_hotdocs()
+    imagine = await get_imagine_cinemas("https://imaginecinemas.com/cinema/market-square/")
 
-    return res
+    return { 
+        "fox": fox, 
+        "revue": revue, 
+        "tiff": tiff, 
+        "paradise": paradise, 
+        "kinsgway": kingsway, 
+        "hotdocs": hotdocs, 
+        "imagine": imagine, 
+        "carlton": carlton 
+    }
